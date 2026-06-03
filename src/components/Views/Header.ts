@@ -7,12 +7,12 @@ interface IHeader {
 }
 
 export class Header extends Component<IHeader> {
-    private counterBlock: HTMLElement;
-    private basketButton: HTMLButtonElement;
+    protected counterElement: HTMLElement;
+    protected basketButton: HTMLButtonElement;
 
     constructor(protected events: IEvents, container: HTMLElement) {
         super(container);
-        this.counterBlock = ensureElement<HTMLElement>('.header__basket-counter', this.container);
+        this.counterElement = ensureElement<HTMLElement>('.header__basket-counter', this.container);
         this.basketButton = ensureElement<HTMLButtonElement>('.header__basket', this.container);
 
         this.basketButton.addEventListener('click', () => {
@@ -21,6 +21,6 @@ export class Header extends Component<IHeader> {
     }
 
     set counter(value: number) {
-        this.counterBlock.textContent = String(value);
+        this.counterElement.textContent = String(value);
     }
 }

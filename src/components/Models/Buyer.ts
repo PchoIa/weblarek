@@ -1,37 +1,59 @@
-import type { IBuyer, TBuyerData, TBuyerErrors, TBuyerField, TPayment } from '../../types';
+import type { IBuyer, TBuyerErrors, TBuyerField, TPayment } from '../../types';
+import { IEvents } from "../base/Events.ts";
+
+const initialData: IBuyer = {
+    payment: 'card',
+    email: '',
+    phone: '',
+    address: '',
+}
 
 export class Buyer {
-    private data: TBuyerData = {};
+    private data: IBuyer = {
+        ...initialData,
+    };
 
-    setBuyerData(data: TBuyerData): void {
-        this.data = {
-            ...this.data,
-            ...data,
-        };
+    private events: IEvents;
+
+    constructor(events: IEvents) {
+        this.events = events;
     }
 
-    setPayment(payment: TPayment): void {
-        this.setBuyerData({ payment });
+    setPayment(payment: TPayment) {
+        this.data = { ...this.data, payment };
+
+        this.events.emit('buyer:order-changed');
     }
 
-    setAddress(address: string): void {
-        this.setBuyerData({ address });
+    setAddress(address: string) {
+        this.data = { ...this.data, address };
+
+        this.events.emit('buyer:order-changed');
     }
 
-    setEmail(email: string): void {
-        this.setBuyerData({ email });
+    setEmail(email: string) {
+        this.data = { ...this.data, email };
+
+        this.events.emit('buyer:contacts-changed');
     }
 
-    setPhone(phone: string): void {
-        this.setBuyerData({ phone });
+    setPhone(phone: string) {
+        this.data = { ...this.data, phone };
+
+        this.events.emit('buyer:contacts-changed');
     }
 
-    getBuyerData(): TBuyerData {
+    getBuyerData(): IBuyer {
         return { ...this.data };
     }
 
     clearBuyerData(): void {
-        this.data = {};
+        this.data = {
+            ...initialData,
+        };
+
+        this.events.emit('buyer:order-changed');
+        this.events.emit('buyer:contacts-changed');
     }
 
     validate(fields: TBuyerField[] = ['payment', 'address', 'email', 'phone']): TBuyerErrors {
@@ -48,12 +70,6 @@ export class Buyer {
 
     isValid(fields?: TBuyerField[]): boolean {
         return Object.keys(this.validate(fields)).length === 0;
-    }
-
-    getOrderBuyerData(): IBuyer | null {
-        return this.isValid()
-            ? this.data as IBuyer
-            : null;
     }
 
     private getFieldError(field: TBuyerField): string {

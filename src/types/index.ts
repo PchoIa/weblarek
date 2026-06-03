@@ -24,7 +24,6 @@ export interface IBuyer {
 }
 
 export type TBuyerField = keyof IBuyer;
-export type TBuyerData = Partial<IBuyer>;
 export type TBuyerErrors = Partial<Record<TBuyerField, string>>;
 
 export interface IProductsResponse {
@@ -40,4 +39,30 @@ export type TOrder = IBuyer & {
 export interface IOrderResult {
     id: string;
     total: number;
+}
+
+/** Описание типов для параметров событий */
+
+export interface CardSelectEventParams {
+    product: IProduct;
+}
+
+export interface BasketItemRemoveEventParams {
+    id: string;
+}
+
+export interface OrderPaymentChangeEventParams {
+    payment: TPayment;
+}
+
+export interface OrderAddressChangeEventParams {
+    address: string;
+}
+
+export interface ContactsEmailChangeEventParams {
+    email: string;
+}
+
+export interface ContactsPhoneChangeEventParams {
+    phone: string;
 }
